@@ -409,14 +409,21 @@ def get_summary():
     })
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-
 # Serve React frontend in production
 @app.route('/')
-@app.route('/<path:path>')
-def serve_frontend(path=''):
-    if path and os.path.exists(os.path.join(STATIC_FOLDER, path)):
-        return send_from_directory(STATIC_FOLDER, path)
+def serve_index():
     return send_from_directory(STATIC_FOLDER, 'index.html')
+
+
+@app.route('/<path:path>')
+def serve_frontend(path):
+    # First try to serve static file
+    file_path = os.path.join(STATIC_FOLDER, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_from_directory(STATIC_FOLDER, path)
+    # Otherwise serve index.html for client-side routing
+    return send_from_directory(STATIC_FOLDER, 'index.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
