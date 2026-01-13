@@ -25,8 +25,9 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max upload
 CORS(app)
 db.init_app(app)
 
-# Ensure upload folder exists
+# Ensure upload folder exists (creates automatically on startup)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs('instance', exist_ok=True)  # For SQLite database
 
 
 def allowed_file(filename):
